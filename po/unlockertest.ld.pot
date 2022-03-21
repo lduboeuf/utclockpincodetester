@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the unlockertest.ld package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: unlockertest.ld\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-20 18:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../qml/Main.qml:42
+msgid "Pin-code clock unlocker tester"
+msgstr ""
+
+#: ../qml/Main.qml:50
+msgid "This is a tester for the \"clock\" pin-code prompt"
+msgstr ""
+
+#: ../qml/Main.qml:60
+msgid "OK"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:112
+msgid "Clock prompt"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:117
+msgid "back"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:127
+msgid "edit"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:183
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:444
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:462
+msgid "Click or swipe on the digits"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:422
+msgid "Display active area"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:443
+msgid "Create a 4 digit pin"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:452
+msgid "Current pin"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:461
+msgid "Test your code"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:469
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:492
+msgid "correct!"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:483
+msgid "Wrong code, try again!"
+msgstr ""
+
+#: unlockertest.desktop.in.h:1
+msgid "Unlocker tester"
+msgstr ""

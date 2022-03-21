@@ -1,0 +1,15 @@
+{
+    "name": "unlockertest.ld",
+    "description": "Test unlock with the pin-code clock",
+    "architecture": "@CLICK_ARCH@",
+    "title": "Pin-code clock unlocker tester",
+    "hooks": {
+        "unlockertest": {
+            "apparmor": "unlockertest.apparmor",
+            "desktop":  "unlockertest.desktop"
+        }
+    },
+    "version": "1.0.0",
+    "maintainer": "Your FullName <email@domain.org>",
+    "framework" : "@CLICK_FRAMEWORK@"
+}

@@ -1,0 +1,7 @@
+[Desktop Entry]
+_Name=Unlocker tester
+Exec=qmlscene %U qml/Main.qml
+Icon=assets/clock.png
+Terminal=false
+Type=Application
+X-Ubuntu-Touch=true
