@@ -15,7 +15,7 @@
  */
 
 import QtQuick 2.7
-import Ubuntu.Components 1.3
+import Lomiri.Components 1.3
 //import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
@@ -29,17 +29,13 @@ MainView {
     width: units.gu(45)
     height: units.gu(75)
 
-//    SchemaPinPromptTutorialNoDots {
-
-//    }
-
     Page {
         id: home
         anchors.fill: parent
 
         header: PageHeader {
             id: header
-            title: i18n.tr('Pin-code clock unlocker tester')
+            title: i18n.tr('Pin-code unlocker tester')
         }
 
         Label {
@@ -47,12 +43,14 @@ MainView {
             anchors.top: header.bottom
             anchors.bottom: btn.top
             width: units.gu(40)
-            text: i18n.tr('This is a tester for the "clock" pin-code prompt')
+            text: i18n.tr('This is a tester for the current "circle" pin-code prompt in Lomiri\n\nSettable via Security&Privacy->Locking and unlocking->Lock security->Digits passcode...->"Circle pattern"\n\nWe can set 4 to 12 digits\n\nNote that the circle size might be different in login page')
+            wrapMode: Label.WordWrap
             elide: Label.ElideRight
 
             verticalAlignment: Label.AlignVCenter
             horizontalAlignment: Label.AlignHCenter
         }
+
 
         Button {
             id: btn

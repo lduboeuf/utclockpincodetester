@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(unlockertest C CXX)
+project(unlockertest)
 
 # Automatically create moc files
 set(CMAKE_AUTOMOC ON)

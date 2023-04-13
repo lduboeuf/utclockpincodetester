@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: unlockertest.ld\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-20 18:04+0000\n"
+"POT-Creation-Date: 2023-02-20 09:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,58 +17,73 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../qml/Main.qml:42
-msgid "Pin-code clock unlocker tester"
+#: ../qml/Main.qml:38
+msgid "Pin-code unlocker tester"
 msgstr ""
 
-#: ../qml/Main.qml:50
-msgid "This is a tester for the \"clock\" pin-code prompt"
+#: ../qml/Main.qml:46
+msgid ""
+"This is a tester for the current \"circle\" pin-code prompt in Lomiri\n"
+"\n"
+"Settable via Security&Privacy->Locking and unlocking->Lock security->Digits "
+"passcode...->\"Circle pattern\"\n"
+"\n"
+"We can set 4 to 12 digits\n"
+"\n"
+"Note that the circle size might be different in login page"
 msgstr ""
 
-#: ../qml/Main.qml:60
+#: ../qml/Main.qml:58
 msgid "OK"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:112
-msgid "Clock prompt"
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:104
+msgid "Circle prompt"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:117
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:109
 msgid "back"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:127
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:119
 msgid "edit"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:183
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:444
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:462
-msgid "Click or swipe on the digits"
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:195
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:578
+msgid "Click or swipe on the digits, click on the circle center to validate"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:422
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:542
+msgid "Display pincode"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:556
 msgid "Display active area"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:443
-msgid "Create a 4 digit pin"
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:577
+msgid "Create a pin code"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:452
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:586
 msgid "Current pin"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:461
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:595
 msgid "Test your code"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:469
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:492
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:596
+msgid "Click or swipe on the digits"
+msgstr ""
+
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:604
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:624
 msgid "correct!"
 msgstr ""
 
-#: ../qml/SchemaPinPromptTutorialNoDots.qml:483
+#: ../qml/SchemaPinPromptTutorialNoDots.qml:615
 msgid "Wrong code, try again!"
 msgstr ""
 

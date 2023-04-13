@@ -17,7 +17,8 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.12
-import Ubuntu.Components 1.3
+import Lomiri.Components 1.3
+import QtFeedback 5.0
 
 Page {
     id: root
@@ -30,14 +31,15 @@ Page {
     property bool hasKeyboard: false //unused
     property string enteredText: ""
     property bool activeAreaVisible: false
+    property bool displayPinCode: false
     property bool changeMode: false
-
     property string codeToTest: ""
+    property string previousState: ""
     property int previousNumber: -1
     property var currentCode: []
-    property int maxnum: 10
-    property int maxPinCodeDigits: 4
-    property string previousState: ""
+    readonly property int maxnum: 10
+    readonly property int minPinCodeDigits: 4
+    readonly property bool validCode: enteredText.length >= minPinCodeDigits
     property bool isLandscape: root.width > root.height
 
     signal clicked()
@@ -47,7 +49,8 @@ Page {
     onCurrentCodeChanged: {
         let tmpText = ""
         let tmpCode = ""
-        for( let i = 0; i < maxPinCodeDigits; i++) {
+        const max = Math.max(minPinCodeDigits, currentCode.length, codeToTest.length )
+        for( let i = 0; i < max; i++) {
             if (i < currentCode.length) {
                 tmpText += '●'
                 tmpCode += currentCode[i]
@@ -58,23 +61,12 @@ Page {
         pinHint.text = tmpText
         root.enteredText = tmpCode
 
-        // hard limit of 4 for passcodes right now
-        if (root.enteredText.length >= maxPinCodeDigits) {
-            if (root.state === "ENTRY_MODE") {
-                root.codeToTest = root.enteredText
-                root.state = "TEST_MODE"
-            } else if (root.state === "EDIT_MODE") {
-                root.codeToTest = root.enteredText
-                root.state = "ENTRY_MODE"
+        if (root.state === "TEST_MODE" &&  (root.enteredText.length > 0) && root.enteredText.length == root.codeToTest.length) {
+            if (root.enteredText === root.codeToTest) {
+                root.state = "PASSWORD_SUCCESS"
             } else {
-                if (root.enteredText === root.codeToTest) {
-                    root.state = "PASSWORD_SUCCESS"
-                } else {
-                    root.state = "WRONG_PASSWORD"
-                }
+                root.state = "WRONG_PASSWORD"
             }
-
-            root.previousState = root.state
         }
     }
 
@@ -96,7 +88,7 @@ Page {
 
     function removeOne() {
         let tmpCodes = currentCode
-        const number = tmpCodes.pop()
+        tmpCodes.pop()
         currentCode = tmpCodes
     }
 
@@ -109,7 +101,7 @@ Page {
 
     header: PageHeader {
         id: pageHeader
-        title: i18n.tr('Clock prompt')
+        title: i18n.tr('Circle prompt')
         leadingActionBar {
             actions: [
                 Action {
@@ -131,9 +123,20 @@ Page {
         }
     }
 
+    HapticsEffect {
+        id: hapticEffect
+        attackIntensity: 0.0
+        attackTime: 50
+        intensity: 0.2
+        duration: 10
+        fadeTime: 50
+        fadeIntensity: 0.0
+    }
+
+
     Rectangle {
         anchors.fill: parent
-        color: UbuntuColors.lightAubergine
+        color: LomiriColors.lightAubergine
     }
 
     StyledItem {
@@ -141,6 +144,7 @@ Page {
 
         readonly property color normal: theme.palette.normal.raisedText
         readonly property color selected: theme.palette.normal.raisedSecondaryText
+        readonly property color selectedCircle: Qt.rgba(selected.r, selected.g, selected.b, 0.2)
         readonly property color disabled:theme.palette.disabled.raisedSecondaryText
     }
 
@@ -176,29 +180,31 @@ Page {
                     }
                 }
             }
-            Label {
-                id: subtitle
-                anchors.horizontalCenter: parent.horizontalCenter
-                fontSize: "medium"
-                text: i18n.tr("Click or swipe on the digits")
-                color: d.selected
+            Rectangle {
+                height: units.gu(4)
+                width: parent.width
+                color: "transparent"
+                Text {
+                    id: subtitle
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    wrapMode: Text.WordWrap
 
-//                Behavior on text {
-//                    SequentialAnimation {
-//                        NumberAnimation { target: subtitle; property: "opacity"; to: 0 }
-//                        PropertyAction {}
-//                        NumberAnimation { target: subtitle; property: "opacity"; to: 1; duration: 1000 }
-//                    }
-//                }
+                    horizontalAlignment: Text.AlignHCenter
+                    //fontSize: "medium"
+                    text: i18n.tr("Click or swipe on the digits, click on the circle center to validate")
+                    color: d.selected
+
+                }
             }
 
             TextField {
                 id: pinHint
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: units.gu(16)
+                width: contentWidth + eraseIcon.width + units.gu(3)
                 readOnly: true
                 color: d.selected
-                maximumLength: root.maxPinCodeDigits
+                maximumLength: 12
                 hasClearButton: false
 
                 font {
@@ -207,6 +213,7 @@ Page {
                 }
 
                 secondaryItem: Icon {
+                    id: eraseIcon
                     name: "erase"
                     objectName: "EraseBtn"
                     height: units.gu(3)
@@ -217,6 +224,7 @@ Page {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: root.removeOne()
+                        onPressAndHold: root.reset()
                     }
                 }
 
@@ -243,12 +251,29 @@ Page {
                 }
 
             }
+
+            Rectangle {
+                height: units.gu(3)
+                width: parent.width
+                color: "transparent"
+                Label {
+                    color: d.selected
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    text: root.enteredText
+                    opacity: root.displayPinCode ? 1.0 : 0.0
+                    font {
+                        pixelSize: units.gu(3)
+                        letterSpacing: units.gu(1.2)
+                    }
+                }
+            }
         }
 
         Rectangle {
             id: main
             objectName: "SelectArea"
-            implicitHeight: root.width > root.height ? root.width /2.2 : root.height / 2
+            implicitHeight: root.width > root.height ? (root.width / grid.columns) * 0.8 : root.width * 0.8
             implicitWidth: implicitHeight
 
             Layout.fillWidth: true
@@ -263,8 +288,28 @@ Page {
                 anchors.fill: parent
 
                 onPositionChanged: {
-                    if (pressed)
+                    if (pressed && root.enteredText.length < pinHint.maximumLength)
                         reEvaluate()
+                }
+
+                onReleased: {
+                    if (root.validCode) {
+                        var child = main.childAt(mouseX, mouseY)
+                        if (child !== null && child.objectName === "CenterCircle") {
+                            console.log('released')
+                            child.animation.restart()
+                            if (root.state !== "TEST_MODE") {
+                                root.codeToTest = root.enteredText
+                                root.state = "TEST_MODE"
+                            } else {
+                                if (root.enteredText === root.codeToTest) {
+                                    root.state = "PASSWORD_SUCCESS"
+                                } else {
+                                    root.state = "WRONG_PASSWORD"
+                                }
+                            }
+                        }
+                    }
                 }
 
                 function reEvaluate() {
@@ -289,6 +334,7 @@ Page {
                 radius: height / 2
                 property int radiusSquared: radius * radius
                 property alias locker: centerImg.source
+                property alias animation: challengeAnim
                 anchors.centerIn: parent
                 color: "transparent"
                 //border.color: d.normal
@@ -296,14 +342,15 @@ Page {
 
                 Icon {
                     id: centerImg
-                    source: "image://theme/lock"
+                    source:  "image://theme/lock"
                     anchors.centerIn: parent
                     width: units.gu(4)
                     height: width
                     //anchors.margins: parent.height / 3
-                    color: d.disabled
+                    color: root.validCode ? d.selected : d.disabled
                     //fillMode: Image.PreserveAspectFit
                     onSourceChanged: imgAnim.start()
+
                 }
 
                 MouseArea {
@@ -314,7 +361,76 @@ Page {
                         if (root.state === "PASSWORD_SUCCESS") {
                             root.state = "TEST_MODE"
                         }
+
+                        if (root.state === "ENTRY_MODE") {
+                            if (root.state === "ENTRY_MODE") {
+                                root.codeToTest = root.enteredText
+                                root.state = "TEST_MODE"
+                            } else if (root.state === "EDIT_MODE") {
+                                root.codeToTest = root.enteredText
+                                root.state = "ENTRY_MODE"
+                            } else {
+                                if (currentCode.length >= minPinCodeDigits) {
+                                    console.log('onPressed center')
+                                    if (root.enteredText === root.codeToTest) {
+                                        root.state = "PASSWORD_SUCCESS"
+                                    } else {
+                                        root.state = "WRONG_PASSWORD"
+                                    }
+                                }
+                            }
+
+                            root.previousState = root.state
+                        }
+
                         mouse.accepted = false
+                    }
+
+                    onReleased: {
+                        console.log('olala released')
+                        if (root.state === "ENTRY_MODE" && (root.enteredText.length > minPinCodeDigits)) {
+                            root.codeToTest = root.enteredText
+                            root.state = "TEST_MODE"
+                        } else {
+//                            if (root.state === "TEST_MODE" &&  (root.enteredText.length > minPinCodeDigits)) {
+//                                if (root.enteredText === root.codeToTest) {
+//                                    root.state = "PASSWORD_SUCCESS"
+//                                } else {
+//                                    root.state = "WRONG_PASSWORD"
+//                                }
+//                            }
+                        }
+
+
+
+                        mouse.accepted = false
+                    }
+                }
+
+                SequentialAnimation {
+                    id: challengeAnim
+                    ParallelAnimation {
+                        PropertyAnimation {
+                            target: centerImg
+                            property: "color"
+                            to: d.selected
+                            duration: 100
+                        }
+                        PropertyAnimation {
+                            target: center
+                            property: "color"
+                            to: d.selectedCircle
+                            duration: 100
+                        }
+                    }
+                    ParallelAnimation {
+
+                        PropertyAnimation {
+                            target: center
+                            property: "color"
+                            to: "transparent"
+                            duration: 400
+                        }
                     }
                 }
 
@@ -356,7 +472,7 @@ Page {
                         property bool selected: false
 
                         Behavior on opacity {
-                            UbuntuNumberAnimation{ duration: 500 }
+                            LomiriNumberAnimation{ duration: 500 }
                         }
                     }
 
@@ -369,7 +485,7 @@ Page {
                     }
 
                     Behavior on bigR {
-                        UbuntuNumberAnimation { duration: 500 }
+                        LomiriNumberAnimation { duration: 500 }
                     }
 
 
@@ -385,9 +501,12 @@ Page {
                             PropertyAnimation {
                                 target: selectionRect
                                 property: "color"
-                                to: Qt.rgba(d.selected.r, d.selected.g, d.selected.b, 0.3)
+                                to: d.selectedCircle
                                 duration: 100
                             }
+                           // ScriptAction {
+                           //     script: hapticEffect.start()
+                           // }
                         }
                         ParallelAnimation {
                             PropertyAnimation {
@@ -409,10 +528,25 @@ Page {
         }
 
         Column {
+            id: bottomArea
             Layout.margins: units.gu(2)
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignBottom
             spacing: units.gu(2)
+
+            RowLayout {
+                width: parent.width
+                Label {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignLeft
+                    text: i18n.tr("Display pincode")
+                    color: d.selected
+                }
+                Switch {
+                    Layout.alignment: Qt.AlignRight
+                    onCheckedChanged: root.displayPinCode = checked
+                }
+            }
 
             RowLayout {
                 width: parent.width
@@ -438,10 +572,10 @@ Page {
             name: "ENTRY_MODE"
             PropertyChanges {
                 target: center
-                locker: "image://theme/lock"
+                locker: "image://theme/ok"
             }
-            PropertyChanges { target: topLabel; text: i18n.tr("Create a 4 digit pin") }
-            PropertyChanges { target: subtitle; text: i18n.tr("Click or swipe on the digits") }
+            PropertyChanges { target: topLabel; text: i18n.tr("Create a pin code") }
+            PropertyChanges { target: subtitle; text: i18n.tr("Click or swipe on the digits, click on the circle center to validate") }
 
             StateChangeScript {
                 script: root.reset();
@@ -464,15 +598,13 @@ Page {
                 script: root.reset();
             }
         },
+
         State {
             name: "PASSWORD_SUCCESS"
             PropertyChanges { target: subtitle; text: i18n.tr("correct!") }
 
             PropertyChanges { target: center; locker: "image://theme/reload" }
             PropertyChanges { target: centerImg; color: d.selected }
-//            StateChangeScript {
-//                script: root.reset();
-//            }
         }
     ]
 
@@ -487,7 +619,7 @@ Page {
             }
         },
         Transition {
-             to: "PASSWORD_SUCCESS";
+            to: "PASSWORD_SUCCESS";
             SequentialAnimation {
                 PropertyAction { target: subtitle; property: "text"; value: i18n.tr("correct!") }
                 PropertyAction { target: center; property: "locker"; value: "image://theme/ok" }
@@ -510,3 +642,4 @@ Page {
         }
     }
 }
+

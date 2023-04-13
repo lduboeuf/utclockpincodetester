@@ -9,7 +9,7 @@
             "desktop":  "unlockertest.desktop"
         }
     },
-    "version": "1.0.0",
+    "version": "1.0.4",
     "maintainer": "Your FullName <email@domain.org>",
     "framework" : "@CLICK_FRAMEWORK@"
 }
