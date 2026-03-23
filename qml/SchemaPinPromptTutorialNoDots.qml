@@ -446,13 +446,14 @@ Page {
                 objectName: "dotRepeater"
                 model: root.maxnum
 
-                Rectangle {
-                    id: selectionRect
+                Item {
+                    id: numberComp
                     height: bigR / 2.2
                     width: height
-                    radius: height / 2
-                    color: activeAreaVisible ? d.selected : "transparent"
-                    opacity: activeAreaVisible ? 0.3 : 1.0
+//                    radius: height / 2
+                    // color: d.selected
+                    // opacity: 0.1
+                    property int radius: height / 2
                     property int number: index
                     property alias dot: point
                     property alias animation: anim
@@ -462,11 +463,19 @@ Page {
                     x: (main.width / 2) + bigR * Math.sin(2 * Math.PI * index / root.maxnum) - offsetRadius
                     y: (main.height / 2) - bigR * Math.cos(2 * Math.PI * index / root.maxnum) - offsetRadius
 
+                    Rectangle {
+                        id: selectionRect
+                        anchors.fill: parent
+                        radius: numberComp.radius
+                        color: d.selected
+                        opacity: 0.1
+                    }
+
                     Text {
                         id: point
                         font.pixelSize: main.height / 10
                         anchors.centerIn: parent
-                        color: d.disabled
+                        color: d.selected
                         text: index
                         opacity: root.state === "ENTRY_MODE" || root.state === "TEST_MODE" || root.state === "EDIT_MODE" ? 1 : 0
                         property bool selected: false
@@ -495,7 +504,7 @@ Page {
                             PropertyAnimation {
                                 target: point
                                 property: "color"
-                                to: d.selected
+                                to: d.disabled
                                 duration: 100
                             }
                             PropertyAnimation {
@@ -512,13 +521,13 @@ Page {
                             PropertyAnimation {
                                 target: point
                                 property: "color"
-                                to: d.disabled
+                                to: d.selected
                                 duration: 400
                             }
                             PropertyAnimation {
                                 target: selectionRect
                                 property: "color"
-                                to: activeAreaVisible ? d.selected : "transparent"
+                                to: d.selected
                                 duration: 400
                             }
                         }

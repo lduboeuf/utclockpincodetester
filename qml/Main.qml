@@ -43,7 +43,9 @@ MainView {
             anchors.top: header.bottom
             anchors.bottom: btn.top
             width: units.gu(40)
-            text: i18n.tr('This is a tester for the current "circle" pin-code prompt in Lomiri\n\nSettable via Security&Privacy->Locking and unlocking->Lock security->Digits passcode...->"Circle pattern"\n\nWe can set 4 to 12 digits\n\nNote that the circle size might be different in login page')
+            text: i18n.tr('This is a tester for the current "circle" pattern login prompt in Lomiri<br>Settable via <a href="settings://system/security-privacy">System Settings Security&amp;Privacy</a> <br> -> Locking and unlocking-> Lock security-> Digits passcode...-> "Circle pattern" <br><br>We can set 4 to 12 digits<br><br>Note that the circle size might be different in login page')
+            textFormat: Text.StyledText
+            onLinkActivated: Qt.openUrlExternally(link)
             wrapMode: Label.WordWrap
             elide: Label.ElideRight
 
